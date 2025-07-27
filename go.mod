@@ -12,5 +12,9 @@ require (
 	github.com/gobwas/httphead v0.1.0 // indirect
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/gobwas/ws v1.4.0 // indirect
+	github.com/osteele/liquid v1.7.0 // indirect
+	github.com/osteele/tuesday v1.0.3 // indirect
 	golang.org/x/sys v0.34.0 // indirect
+	gopkg.in/osteele/liquid.v1 v1.2.4 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
