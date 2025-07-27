@@ -1,4 +1,6 @@
-# Simple app to render a TRMNL screen
+# byos-screen-renderer
+
+Simple app to render a TRMNL screen
 
 ## Local dev
 ```
@@ -7,8 +9,8 @@ go run main.go
 
 ## Build and run docker
 ```
-docker build -t go-liquid-renderer .
-docker run -p 8080:8080 --rm go-liquid-renderer
+docker build -t byos-screen-renderer .
+docker run -p 8080:8080 --rm byos-screen-renderer
 ```
 
 ## Usage
