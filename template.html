@@ -1,0 +1,96 @@
+<link rel="stylesheet" media="all" href="./style.css">
+<body class="environment trmnl">
+  <div class="trmnl environment">
+    <div class="screen">
+<div class="layout">
+  <div class="columns">
+    <div class="column">
+      <span class="label">Account dashboard</span>
+      <table class="table">
+        <thead>
+          <tr>
+            <th><span class="label label--small">Metric</span></th>
+            <th><span class="label label--small">Value</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for bug in bugs %}
+          <tr>
+            <td><span class="title title--small">{{bug[0]}}</span></td>
+            <td><span class="label">{{bug[1]}}</span></td>
+          </tr>
+          {% endfor %}
+        <!--
+          <tr>
+            <td><span class="title title--small">Products Sold</span></td>
+            <td><span class="label">137</span></td>
+          </tr>
+          <tr>
+            <td><span class="title title--small">Revenue</span></td>
+            <td><span class="label">$12,450</span></td>
+          </tr>
+          -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="column">
+      <span class="label">Other errors</span>
+      <table class="table">
+        <thead>
+          <tr>
+            <th><span class="label label--small">Metric</span></th>
+            <th><span class="label label--small">Value</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for stat in other_stats %}
+          <tr>
+            <td><span class="title title--small">{{stat[0]}}</span></td>
+            <td><span class="label">{{ stat[1] }}</span></td>
+          </tr>
+          {% endfor %}
+          <!--
+          <tr>
+            <td><span class="title title--small">Recipients</span></td>
+            <td><span class="label">20,129</span></td>
+          </tr>
+          <tr>
+            <td><span class="title title--small">Open rate</span></td>
+            <td><span class="label">6.55%</span></td>
+          </tr>
+          <tr>
+            <td><span class="title title--small">Click rate</span></td>
+            <td><span class="label">0.76%</span></td>
+          </tr>
+          <tr>
+            <td><span class="title title--small">Unsubscribes</span></td>
+            <td><span class="label">14</span></td>
+          </tr>
+          <tr>
+            <td><span class="title title--small">Clicks</span></td>
+            <td><span class="label">654</span></td>
+          </tr>
+          <tr>
+            <td><span class="title title--small">Status</span></td>
+            <td><span class="label">Completed</span></td>
+          </tr>
+          <tr>
+            <td><span class="title title--small">Conversion rate</span></td>
+            <td><span class="label">3.25%</span></td>
+          </tr>
+          -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <img class="image" src="https://usetrmnl.com/images/plugins/trmnl--render.svg">
+  <span class="title">{{ trmnl.plugin_settings.instance_name }}</span>
+  <span class="instance">{{ event_date }}</span>
+</div>
+</div>
+</div>
+</body>
