@@ -26,10 +26,28 @@ func main() {
 		log.Fatalf("Failed to parse template: %v", err)
 	}
 
+	// data := map[string]interface{}{
+	// 	"title":   "Liquid Screenshot",
+	// 	"date": "Jul 26, 2025",
+	// }
+
 	data := map[string]interface{}{
-		"title":   "Liquid Screenshot",
+		"title": "Nested Liquid Example with Array",
 		"date": "Jul 26, 2025",
+		"column_1_title": "Nested Liquid Example with Array 1",
+		"column_2_title": "Nested Liquid Example with Array 2",
+		// "user": map[string]interface{}{
+		// 	"name":  "Eric",
+		// 	"email": "eric@example.com",
+		// },
+		"column_1": []interface{}{
+			map[string]interface{}{"name": "Apples"},
+		},
+		"column_2": []interface{}{
+			map[string]interface{}{"bob": "cool"},
+		},
 	}
+
 
 	renderedHTML, err := tmpl.Render(data)
 	if err != nil {
