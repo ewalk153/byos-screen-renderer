@@ -17034,7 +17034,7 @@ tr,td,th {
                 <div class="layout">
   <div class="columns" style="gap: 9px;">
     <div class="column">
-      <span class="label">Column 1 title</span>
+      <span class="label">{{ column_1_title }} </span>
       <table class="table">
         <thead>
           <tr>
@@ -17043,17 +17043,18 @@ tr,td,th {
           </tr>
         </thead>
         <tbody>
-          
+          {% for item in column_1 %}
           <tr>
-            <td><span class="title title--small">overdue_sum</span></td>
-            <td><span class="label">1</span></td>
+            <td><span class="title title--small">{{ item[0] }}</span></td>
+            <td><span class="label">{{ item[1] }}</span></td>
           </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>
 
     <div class="column">
-      <span class="label">Column 2 title</span>
+      <span class="label">{{ column_2_title }} </span>
       <table class="table">
         <thead>
           <tr>
@@ -17063,10 +17064,12 @@ tr,td,th {
         </thead>
         <tbody>
           
+          {% for item in column_2 %}
           <tr>
-            <td><span class="title title--small">flaky_test_outstanding</span></td>
-            <td><span class="label">1</span></td>
+            <td><span class="title title--small">{{ item[0] }}</span></td>
+            <td><span class="label">{{ item[1] }}</span></td>
           </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>
@@ -17075,7 +17078,7 @@ tr,td,th {
 
 <div class="title_bar">
   <img class="image" src="https://usetrmnl.com/images/plugins/trmnl--render.svg">
-  <span class="title">Subtitle</span>
+  <span class="title">{{ title }}</span>
   <span class="instance">07/16/2025</span>
 </div>
         </div>
