@@ -26,10 +26,15 @@ var (
 
 func main() {
 	http.HandleFunc("/render", handleRender)
+	http.HandleFunc("/up", healthCheck)
 	http.HandleFunc("/screenshot.bmp", serveScreenshot)
 
 	fmt.Println("Server running at http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
+}
+
+func healthCheck(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "OK")
 }
 
 func handleRender(w http.ResponseWriter, r *http.Request) {
