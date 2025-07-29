@@ -1,1 +1,7 @@
 output.bmp
+
+# keep deployment setup out of public repo
+.kamal/
+Gemfile
+Gemfile.lock
+config/
