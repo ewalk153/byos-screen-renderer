@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"strconv"
 	"sync"
 	"time"
 
@@ -91,7 +92,13 @@ func serveScreenshot(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 
 	w.Header().Set("Content-Type", "image/bmp")
-	w.Header().Set("Content-Length", "2")
+
+	fi, err := file.Stat()
+	if err != nil {
+		http.Error(w, "Failed to get file size", http.StatusNotFound)
+		return
+	}
+	w.Header().Set("Content-Length", strconv.FormatInt(fi.Size(), 10))
 	io.Copy(w, file)
 }
 
