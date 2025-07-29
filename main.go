@@ -162,7 +162,7 @@ func generateScreenshot(html string) error {
 		"-strip",
 		"png:" + outputPNG,
 	}
-	cmd := exec.Command("magick", convertArgs...)
+	cmd := exec.Command("convert", convertArgs...)
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 
