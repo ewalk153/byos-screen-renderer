@@ -21,14 +21,15 @@ import (
 var (
 	engine        = liquid.NewEngine()
 	templatePath  = "template.liquid"
-	screenshotBMP = "screenshot.bmp"
-	mutex         sync.Mutex // protects access to screenshot.bmp
+	screenshotPNG = "screenshot.png"
+	outputPNG     = "output.png"
+	mutex         sync.Mutex // protects access to output.png
 )
 
 func main() {
 	http.HandleFunc("/render", handleRender)
 	http.HandleFunc("/up", healthCheck)
-	http.HandleFunc("/screenshot.bmp", serveScreenshot)
+	http.HandleFunc("/screenshot.png", serveScreenshot) // still mounted here for backward compat
 
 	fmt.Println("Server running at http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
@@ -77,42 +78,36 @@ func handleRender(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	w.WriteHeader(http.StatusAccepted)
-	w.Write([]byte("Rendering started. Visit /screenshot.bmp to retrieve the result."))
+	w.Write([]byte("Rendering started. Visit /screenshot.png to retrieve the result."))
 }
 
 func serveScreenshot(w http.ResponseWriter, r *http.Request) {
 	mutex.Lock()
 	defer mutex.Unlock()
 
-	file, err := os.Open(screenshotBMP)
+	file, err := os.Open(outputPNG)
 	if err != nil {
 		http.Error(w, "Screenshot not ready", http.StatusNotFound)
 		return
 	}
 	defer file.Close()
 
-	w.Header().Set("Content-Type", "image/bmp")
-
 	fi, err := file.Stat()
 	if err != nil {
 		http.Error(w, "Failed to get file size", http.StatusNotFound)
 		return
 	}
+
+	w.Header().Set("Content-Type", "image/png")
 	w.Header().Set("Content-Length", strconv.FormatInt(fi.Size(), 10))
 	io.Copy(w, file)
 }
 
 func generateScreenshot(html string) error {
-	// Use custom Chromium path for Docker
-	// Default chromedp options
 	opts := chromedp.DefaultExecAllocatorOptions[:]
-
-	// If CHROMIUM_PATH is set, use it explicitly (e.g., in Docker)
 	if path := os.Getenv("CHROMIUM_PATH"); path != "" {
 		opts = append(opts, chromedp.ExecPath(path))
 	}
-
-	// Always apply these options
 	opts = append(opts,
 		chromedp.NoSandbox,
 		chromedp.Headless,
@@ -128,7 +123,6 @@ func generateScreenshot(html string) error {
 	ctx, cancel = context.WithTimeout(ctx, 15*time.Second)
 	defer cancel()
 
-	// Write HTML to a temporary file
 	tmpFile, err := os.CreateTemp("", "*.html")
 	if err != nil {
 		return err
@@ -152,25 +146,23 @@ func generateScreenshot(html string) error {
 		return err
 	}
 
-	tmpPNG := "screenshot.png"
-	if err := os.WriteFile(tmpPNG, buf, 0644); err != nil {
+	if err := os.WriteFile(screenshotPNG, buf, 0644); err != nil {
 		return err
 	}
-	defer os.Remove(tmpPNG)
+	defer os.Remove(screenshotPNG)
 
 	mutex.Lock()
 	defer mutex.Unlock()
 
 	convertArgs := []string{
-		tmpPNG,
+		screenshotPNG,
 		"-dither", "FloydSteinberg",
 		"-remap", "pattern:gray50",
 		"-depth", "1",
-		"-colors", "2",
 		"-strip",
-		screenshotBMP,
+		"png:" + outputPNG,
 	}
-	cmd := exec.Command("convert", convertArgs...)
+	cmd := exec.Command("magick", convertArgs...)
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 

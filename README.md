@@ -15,7 +15,7 @@ docker run -p 8080:8080 --rm byos-screen-renderer
 
 ## Usage
 ```
-	curl -X POST http://localhost:8080/render \
+curl -X POST http://localhost:8080/render \
   -H "Content-Type: application/json" \
   -d '	{
 		"title": "App running",
@@ -31,9 +31,9 @@ docker run -p 8080:8080 --rm byos-screen-renderer
 			"Type": "cool"
 		}
 	}'
-  ```
-  and fetch the results
+```
+and fetch the results
 
   ```
-curl http://localhost:8080/screenshot.bmp -o output.bmp
-  ```
+curl http://localhost:8080/screenshot.png -o output.png
+```
