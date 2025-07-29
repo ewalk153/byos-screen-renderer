@@ -91,6 +91,7 @@ func serveScreenshot(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 
 	w.Header().Set("Content-Type", "image/bmp")
+	w.Header().Set("Content-Length", "2")
 	io.Copy(w, file)
 }
 
