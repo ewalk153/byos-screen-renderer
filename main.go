@@ -87,6 +87,7 @@ func serveScreenshot(w http.ResponseWriter, r *http.Request) {
 
 	file, err := os.Open(outputPNG)
 	if err != nil {
+		log.Println("Screenshot serve failed:", err)
 		http.Error(w, "Screenshot not ready", http.StatusNotFound)
 		return
 	}
@@ -125,11 +126,13 @@ func generateScreenshot(html string) error {
 
 	tmpFile, err := os.CreateTemp("", "*.html")
 	if err != nil {
+		log.Println("Failed create temp file:", err)
 		return err
 	}
 	defer os.Remove(tmpFile.Name())
 
 	if _, err := tmpFile.Write([]byte(html)); err != nil {
+		log.Println("Failed write temp file:", err)
 		return err
 	}
 	tmpFile.Close()
@@ -143,10 +146,12 @@ func generateScreenshot(html string) error {
 		chromedp.WaitReady("body", chromedp.ByQuery),
 		chromedp.CaptureScreenshot(&buf),
 	); err != nil {
+		log.Println("Failed chrome session", err)
 		return err
 	}
 
 	if err := os.WriteFile(screenshotPNG, buf, 0644); err != nil {
+		log.Println("Failed write final screenshot", err)
 		return err
 	}
 	defer os.Remove(screenshotPNG)
@@ -167,6 +172,7 @@ func generateScreenshot(html string) error {
 	cmd.Stderr = &stderr
 
 	if err := cmd.Run(); err != nil {
+		log.Println("ImageMagick convert failed:", err)
 		return fmt.Errorf("ImageMagick convert failed: %v\n%s", err, stderr.String())
 	}
 
