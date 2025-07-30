@@ -27,6 +27,9 @@ var (
 )
 
 func main() {
+	if envOutputPNG := os.Getenv("OUTPUT_PATH"); envOutputPNG != "" {
+		outputPNG = envOutputPNG
+	}
 	http.HandleFunc("/render", handleRender)
 	http.HandleFunc("/up", healthCheck)
 	http.HandleFunc("/screenshot.png", serveScreenshot) // still mounted here for backward compat

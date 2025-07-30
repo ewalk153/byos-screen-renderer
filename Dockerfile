@@ -37,6 +37,7 @@ EXPOSE 8080
 
 # Specify chromium path
 ENV CHROMIUM_PATH=/usr/bin/chromium
+ENV OUTPUT_PATH=/output/output.png
 
 # Launch server
 CMD ["./app"]
