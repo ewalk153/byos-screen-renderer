@@ -1,4 +1,4 @@
-module github.com/terminus_cli
+module github.com/byos-screen-renderer
 
 go 1.24
 
