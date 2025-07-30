@@ -37,3 +37,10 @@ and fetch the results
   ```
 curl http://localhost:8080/screenshot.png -o output.png
 ```
+
+
+## Next feature ideas
+
+- passing key on render that must be passed to retrieve the image (query param handle)
+- split out liquid layout from body template, allow template per handle
+- cache rendered files, leverage docker dir mapping to support application reboots
