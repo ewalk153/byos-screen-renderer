@@ -15,7 +15,7 @@ docker run -v "$(pwd)/tmp:/output" -p 8080:8080 --rm byos-screen-renderer
 
 ## Usage
 ```
-curl -X POST http://localhost:8080/render \
+curl -X POST http://localhost:8080/render/myslug \
   -H "Content-Type: application/json" \
   -d '	{
 		"title": "App running",
@@ -35,7 +35,7 @@ curl -X POST http://localhost:8080/render \
 and fetch the results
 
   ```
-curl http://localhost:8080/screenshot.png -o output.png
+curl http://localhost:8080/screenshot.png/myslug -o output.png
 ```
 
 

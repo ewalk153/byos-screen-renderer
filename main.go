@@ -22,17 +22,17 @@ var (
 	engine        = liquid.NewEngine()
 	templatePath  = "template.liquid"
 	screenshotPNG = "screenshot.png"
-	outputPNG     = "output.png"
+	outputBasePNG = "output.png"
 	mutex         sync.Mutex // protects access to output.png
 )
 
 func main() {
 	if envOutputPNG := os.Getenv("OUTPUT_PATH"); envOutputPNG != "" {
-		outputPNG = envOutputPNG
+		outputBasePNG = envOutputPNG
 	}
-	http.HandleFunc("/render", handleRender)
+	http.HandleFunc("/render/{slug}", handleRender)
 	http.HandleFunc("/up", healthCheck)
-	http.HandleFunc("/screenshot.png", serveScreenshot) // still mounted here for backward compat
+	http.HandleFunc("/screenshot.png/{slug}", serveScreenshot) // still mounted here for backward compat
 
 	fmt.Println("Server running at http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
@@ -47,6 +47,7 @@ func handleRender(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Only POST supported", http.StatusMethodNotAllowed)
 		return
 	}
+	slug := r.PathValue("slug")
 
 	defer r.Body.Close()
 	var data map[string]interface{}
@@ -55,7 +56,13 @@ func handleRender(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	templateBytes, err := os.ReadFile(templatePath)
+	var templateBytes []byte
+	var err error
+	// if data["template"].(string) != "" {
+	// 	templateBytes = []byte(data["template"].(string))
+	// } else {
+	// }
+	templateBytes, err = os.ReadFile(templatePath)
 	if err != nil {
 		http.Error(w, "Failed to read template: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -75,7 +82,7 @@ func handleRender(w http.ResponseWriter, r *http.Request) {
 	renderedHTML := string(renderedBytes)
 
 	go func() {
-		if err := generateScreenshot(renderedHTML); err != nil {
+		if err := generateScreenshot(renderedHTML, slug); err != nil {
 			log.Println("Screenshot generation failed:", err)
 		}
 	}()
@@ -85,6 +92,11 @@ func handleRender(w http.ResponseWriter, r *http.Request) {
 }
 
 func serveScreenshot(w http.ResponseWriter, r *http.Request) {
+	slug := r.PathValue("slug")
+	outputPNG := outputBasePNG
+	if slug != "" {
+		outputPNG = slug + "-" + outputPNG
+	}
 	mutex.Lock()
 	defer mutex.Unlock()
 
@@ -107,7 +119,11 @@ func serveScreenshot(w http.ResponseWriter, r *http.Request) {
 	io.Copy(w, file)
 }
 
-func generateScreenshot(html string) error {
+func generateScreenshot(html string, slug string) error {
+	outputPNG := outputBasePNG
+	if slug != "" {
+		outputPNG = slug + "-" + outputPNG
+	}
 	opts := chromedp.DefaultExecAllocatorOptions[:]
 	if path := os.Getenv("CHROMIUM_PATH"); path != "" {
 		opts = append(opts, chromedp.ExecPath(path))
