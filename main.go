@@ -58,11 +58,13 @@ func handleRender(w http.ResponseWriter, r *http.Request) {
 
 	var templateBytes []byte
 	var err error
-	// if data["template"].(string) != "" {
-	// 	templateBytes = []byte(data["template"].(string))
-	// } else {
-	// }
-	templateBytes, err = os.ReadFile(templatePath)
+	var jsonTemplate = data["template"]
+	if _, ok := jsonTemplate.(string); ok {
+		templateBytes = []byte(data["template"].(string))
+	}
+	if string(templateBytes) == "" {
+		templateBytes, err = os.ReadFile(templatePath)
+	}
 	if err != nil {
 		http.Error(w, "Failed to read template: "+err.Error(), http.StatusInternalServerError)
 		return

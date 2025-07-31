@@ -18,6 +18,7 @@ docker run -v "$(pwd)/tmp:/output" -p 8080:8080 --rm byos-screen-renderer
 curl -X POST http://localhost:8080/render/myslug \
   -H "Content-Type: application/json" \
   -d '	{
+		"template": "<body>hi</body>",
 		"title": "App running",
 		"date": "Jul 26, 2025",
 		"column_1_title": "Nested Liquid Example with Array 1",
@@ -41,6 +42,6 @@ curl http://localhost:8080/screenshot.png/myslug -o output.png
 
 ## Next feature ideas
 
-- [ ] passing key on render that must be passed to retrieve the image (query param handle)
-- [ ] split out liquid layout from body template, allow template per handle
+- [x] passing key on render that must be passed to retrieve the image (query param handle)
+- [x] split out liquid layout from body template, allow template per handle
 - [x] cache rendered files, leverage docker dir mapping to support application reboots
