@@ -33,9 +33,11 @@ curl -X POST http://localhost:8080/render/myslug \
 		}
 	}'
 ```
-and fetch the results
 
-  ```
+Note, the template field is optional. By default, template.liquid is used.
+
+To fetch the results:
+```
 curl http://localhost:8080/screenshot.png/myslug -o output.png
 ```
 
