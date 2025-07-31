@@ -23,12 +23,13 @@ var (
 	templatePath  = "template.liquid"
 	screenshotPNG = "screenshot.png"
 	outputBasePNG = "output.png"
+	outputPath    = ""
 	mutex         sync.Mutex // protects access to output.png
 )
 
 func main() {
 	if envOutputPNG := os.Getenv("OUTPUT_PATH"); envOutputPNG != "" {
-		outputBasePNG = envOutputPNG
+		outputPath = envOutputPNG
 	}
 	http.HandleFunc("/render/{slug}", handleRender)
 	http.HandleFunc("/up", healthCheck)
@@ -99,6 +100,7 @@ func serveScreenshot(w http.ResponseWriter, r *http.Request) {
 	if slug != "" {
 		outputPNG = slug + "-" + outputPNG
 	}
+	outputPNG = outputPath + outputPNG
 	mutex.Lock()
 	defer mutex.Unlock()
 
@@ -126,6 +128,7 @@ func generateScreenshot(html string, slug string) error {
 	if slug != "" {
 		outputPNG = slug + "-" + outputPNG
 	}
+	outputPNG = outputPath + outputPNG
 	opts := chromedp.DefaultExecAllocatorOptions[:]
 	if path := os.Getenv("CHROMIUM_PATH"); path != "" {
 		opts = append(opts, chromedp.ExecPath(path))
