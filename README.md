@@ -9,8 +9,8 @@ go run main.go
 
 ## Build and run docker
 ```
-docker build -t byos-screen-renderer .
-docker run -v "$(pwd)/tmp:/output" -p 8080:8080 --rm byos-screen-renderer
+docker build -t byos-screen-renderer-ruby .
+docker run -v "$(pwd)/tmp:/output" -p 8080:8080 --rm byos-screen-renderer-ruby
 ```
 
 ## Usage
